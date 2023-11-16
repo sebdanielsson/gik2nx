@@ -36,24 +36,24 @@ def check_turn(board):
 
 def check_winning(board):
     line=0
-    if board[0]==board[1] and board[1]==board[2] and board[0]!=0:
-        line=board[0]
-    if board[3]==board[4] and board[4]==board[5] and board[3]!=0:
-        line=board[3]
-    if board[6]==board[7] and board[7]==board[8] and board[6]!=0:
-        line=board[6]
+    if board[0][0]==board[0][1] and board[0][1]==board[0][2] and board[0][0]!=0:
+        line=board[0][0]
+    if board[1][0]==board[1][1] and board[1][1]==board[1][2] and board[1][0]!=0:
+        line=board[1][0]
+    if board[2][0]==board[2][1] and board[2][1]==board[2][2] and board[2][0]!=0:
+        line=board[2][0]
         
-    if board[0]==board[3] and board[3]==board[6] and board[0]!=0:
-        line=board[0]
-    if board[1]==board[4] and board[4]==board[7] and board[1]!=0:
-        line=board[1]
-    if board[2]==board[5] and board[5]==board[8] and board[2]!=0:
-        line=board[2]
+    if board[0][0]==board[1][0] and board[1][0]==board[2][0] and board[0][0]!=0:
+        line=board[0][0]
+    if board[0][1]==board[1][1] and board[1][1]==board[2][1] and board[0][1]!=0:
+        line=board[0][1]
+    if board[0][2]==board[1][2] and board[1][2]==board[2][2] and board[0][2]!=0:
+        line=board[0][2]
 
-    if board[0]==board[4] and board[4]==board[8] and board[0]!=0:
-        line=board[0]
-    if board[2]==board[4] and board[4]==board[6] and board[2]!=0:
-        line=board[2]  
+    if board[0][0]==board[1][1] and board[1][1]==board[2][2] and board[0][0]!=0:
+        line=board[0][0]
+    if board[0][2]==board[1][1] and board[1][1]==board[2][0] and board[0][2]!=0:
+        line=board[0][2]  
     return line
 
 def check_board_full(board):
@@ -62,6 +62,14 @@ def check_board_full(board):
             if cell == " ":
                 return False
     return True
+
+def check_move_valid(board, row, col):
+    if row < 0 or row > 2 or col < 0 or col > 2:
+        return False
+    elif board[row][col] != " ":
+        return False
+    else:
+        return True
 
 load_dotenv()
 
@@ -107,28 +115,28 @@ class Player1TurnState(State):
         print("Player X's turn.\n")
         print_board(board)
         move = input("Enter your move (row, column): ")
-        row, col = move.split(",")
-        board[int(row)][int(col)] = "X"
+        row, col = map(int, move.split(","))
+        check_move_valid(board, row, col)
+        board[row][col] = "X"
         self.set_next_state(CHECK_WIN)
 
 class Player2TurnState(State):
     async def run(self):
-        print("Player O's turn.\n")
-        # Implement Player 2's turn logic here
-        # Update self.agent.board and current_player
+        board = self.agent.board
+        print("Player X's turn.\n")
+        print_board(board)
+        move = input("Enter your move (row, column): ")
+        row, col = map(int, move.split(","))
+        check_move_valid(board, row, col)
+        board[row][col] = "O"
         self.set_next_state(CHECK_WIN)
 
 class CheckWinState(State):
     async def run(self):
         print("Checking if game is over...\n")
         board = self.agent.board
+        print_board(board)
         line = check_winning(board)
-        if check_turn(board) == "X":
-                print("Player X's turn.\n")
-                self.set_next_state(PLAYER1_TURN)
-        else:
-            print("Player O's turn.\n")
-            self.set_next_state(PLAYER2_TURN)
         if line == "X":
             print("Player X wins!")
             self.set_next_state(END_GAME)
