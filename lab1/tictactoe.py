@@ -116,7 +116,12 @@ class Player1TurnState(State):
         print_board(board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
-        check_move_valid(board, row, col)
+        valid_move = check_move_valid(board, row, col)
+        while valid_move == False:
+            print("Invalid move, try again")
+            move = input("Enter your move (row, column): ")
+            row, col = map(int, move.split(","))
+            valid_move = check_move_valid(board, row, col)
         board[row][col] = "X"
         self.set_next_state(CHECK_WIN)
 
@@ -127,7 +132,12 @@ class Player2TurnState(State):
         print_board(board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
-        check_move_valid(board, row, col)
+        valid_move = check_move_valid(board, row, col)
+        while valid_move == False:
+            print("Invalid move, try again")
+            move = input("Enter your move (row, column): ")
+            row, col = map(int, move.split(","))
+            valid_move = check_move_valid(board, row, col)
         board[row][col] = "O"
         self.set_next_state(CHECK_WIN)
 
