@@ -133,7 +133,6 @@ class Player2TurnState(State):
 
 class CheckWinState(State):
     async def run(self):
-        print("Checking if game is over...\n")
         board = self.agent.board
         line = check_winning(board)
         if line == "X":
