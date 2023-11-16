@@ -147,15 +147,12 @@ class CheckWinState(State):
         line = check_winning(board)
         if line == "X":
             print("Player X wins!")
-            print_board(board)
             self.set_next_state(END_GAME)
         elif line == "O":
             print("Player O wins!")
-            print_board(board)
             self.set_next_state(END_GAME)
         elif check_board_full(board):
             print("It's a tie!")
-            print_board(board)
             self.set_next_state(END_GAME)
         else:
             # Game is not over, so change turn
@@ -166,6 +163,8 @@ class CheckWinState(State):
 
 class EndGameState(State):
     async def run(self):
+        board = self.agent.board
+        print_board(board)
         print("Game Over.\n")
         # Display the result and clean up
         self.set_next_state(EXIT)
