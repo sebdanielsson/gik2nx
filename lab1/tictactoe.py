@@ -123,7 +123,7 @@ class Player1TurnState(State):
 class Player2TurnState(State):
     async def run(self):
         board = self.agent.board
-        print("Player X's turn.\n")
+        print("Player O's turn.\n")
         print_board(board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
@@ -135,7 +135,6 @@ class CheckWinState(State):
     async def run(self):
         print("Checking if game is over...\n")
         board = self.agent.board
-        print_board(board)
         line = check_winning(board)
         if line == "X":
             print("Player X wins!")
