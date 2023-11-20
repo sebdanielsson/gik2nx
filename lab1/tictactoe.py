@@ -187,6 +187,7 @@ class EndGameState(State):
             self.agent.reset_board()  # Reset the board in the agent
             self.set_next_state(START)
         elif choice == 'n':
+            print("Exiting game.\n")
             if self.agent is not None:
                 await self.agent.stop()
             self.set_next_state(EXIT)
@@ -197,7 +198,6 @@ class ExitState(State):
         self.agent = agent
 
     async def run(self):
-        print("Exiting game.\n")
         await self.agent.stop()
 
 # Main execution
