@@ -1,10 +1,8 @@
 import asyncio
-from calendar import c
-import os
-from tabnanny import check
+from dotenv import load_dotenv
+from os import getenv
 from spade.agent import Agent
 from spade.behaviour import FSMBehaviour, State
-from dotenv import load_dotenv
 
 def new_board():
     return [
@@ -73,8 +71,8 @@ def check_move_valid(board, row, col):
 
 load_dotenv()
 
-XMPP_JID = os.getenv('XMPP_JID', 'test@localhost')
-XMPP_PASSWORD = os.getenv('XMPP_PASSWORD', 'password')
+XMPP_JID = getenv('XMPP_JID', 'test@localhost')
+XMPP_PASSWORD = getenv('XMPP_PASSWORD', 'password')
 
 # FSM State names
 START, PLAYER1_TURN, PLAYER2_TURN, CHECK_WIN, END_GAME, EXIT = "START", "PLAYER1_TURN", "PLAYER2_TURN", "CHECK_WIN", "END_GAME", "EXIT"
@@ -83,107 +81,114 @@ class TicTacToeAgent(Agent):
     def __init__(self, jid, password, verify_security=False):
         super().__init__(jid, password, verify_security)
         self.board = new_board()   # Initialize the board
-        self.current_player = "X"  # Player X starts
 
     async def setup(self):
         fsm = FSMBehaviour()
-        fsm.add_state(name=START, state=StartState(self.board), initial=True)
-        fsm.add_state(name=PLAYER1_TURN, state=Player1TurnState(self.board))
-        fsm.add_state(name=PLAYER2_TURN, state=Player2TurnState(self.board))
-        fsm.add_state(name=CHECK_WIN, state=CheckWinState(self.board))
-        fsm.add_state(name=END_GAME, state=EndGameState(self.board))
+        fsm.add_state(name=START, state=StartState(self), initial=True)
+        fsm.add_state(name=PLAYER1_TURN, state=Player1TurnState(self))
+        fsm.add_state(name=PLAYER2_TURN, state=Player2TurnState(self))
+        fsm.add_state(name=CHECK_WIN, state=CheckWinState(self))
+        fsm.add_state(name=END_GAME, state=EndGameState(self))
         fsm.add_state(name=EXIT, state=ExitState(self))
 
         fsm.add_transition(START, PLAYER1_TURN)
         fsm.add_transition(PLAYER1_TURN, CHECK_WIN)
         fsm.add_transition(PLAYER2_TURN, CHECK_WIN)
-        fsm.add_transition(CHECK_WIN, PLAYER1_TURN)  # Default transition
-        fsm.add_transition(CHECK_WIN, PLAYER2_TURN)  # Will be chosen in CHECK_WIN if needed
-        fsm.add_transition(CHECK_WIN, END_GAME)      # Will be chosen in CHECK_WIN if game over
+        fsm.add_transition(CHECK_WIN, PLAYER1_TURN)
+        fsm.add_transition(CHECK_WIN, PLAYER2_TURN)
+        fsm.add_transition(CHECK_WIN, END_GAME)
+        fsm.add_transition(END_GAME, START)
         fsm.add_transition(END_GAME, EXIT)
 
         self.add_behaviour(fsm)
 
+    def reset_board(self):
+        self.board = new_board()
+
 class StartState(State):
-    def __init__(self, board):
+    def __init__(self, agent):
         super().__init__()
-        self.board = board
+        self.agent = agent
 
     async def run(self):
-        print("Game started! Player X begins.\n")
+        print("Game started! Player X begins.")
         self.set_next_state(PLAYER1_TURN)
 
 class Player1TurnState(State):
-    def __init__(self, board):
+    def __init__(self, agent):
         super().__init__()
-        self.board = board
+        self.agent = agent
 
     async def run(self):
-        print("Player X's turn.\n")
-        print_board(self.board)
+        print("\nPlayer X's turn.")
+        print_board(self.agent.board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
-        valid_move = check_move_valid(self.board, row, col)
+        valid_move = check_move_valid(self.agent.board, row, col)
         while valid_move == False:
             print("Invalid move, try again")
             move = input("Enter your move (row, column): ")
             row, col = map(int, move.split(","))
-            valid_move = check_move_valid(self.board, row, col)
-        self.board[row][col] = "X"
+            valid_move = check_move_valid(self.agent.board, row, col)
+        self.agent.board[row][col] = "X"
         self.set_next_state(CHECK_WIN)
 
 class Player2TurnState(State):
-    def __init__(self, board):
+    def __init__(self, agent):
         super().__init__()
-        self.board = board
+        self.agent = agent
 
     async def run(self):
-        print("Player O's turn.\n")
-        print_board(self.board)
+        print("\nPlayer O's turn.")
+        print_board(self.agent.board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
-        valid_move = check_move_valid(self.board, row, col)
+        valid_move = check_move_valid(self.agent.board, row, col)
         while valid_move == False:
             print("Invalid move, try again")
             move = input("Enter your move (row, column): ")
             row, col = map(int, move.split(","))
-            valid_move = check_move_valid(self.board, row, col)
-        self.board[row][col] = "O"
+            valid_move = check_move_valid(self.agent.board, row, col)
+        self.agent.board[row][col] = "O"
         self.set_next_state(CHECK_WIN)
 
 class CheckWinState(State):
-    def __init__(self, board):
+    def __init__(self, agent):
         super().__init__()
-        self.board = board
+        self.agent = agent
 
     async def run(self):
-        line = check_winning(self.board)
-        if line == "X":
-            print("Player X wins!")
+        line = check_winning(self.agent.board)
+        if line in ["X", "O"]:
+            print(f"\nPlayer {line} wins!")
             self.set_next_state(END_GAME)
-        elif line == "O":
-            print("Player O wins!")
-            self.set_next_state(END_GAME)
-        elif check_board_full(self.board):
-            print("It's a tie!")
+        elif check_board_full(self.agent.board):
+            print("\nIt's a tie!")
             self.set_next_state(END_GAME)
         else:
-            # Game is not over, so change turn
-            if check_turn(self.board) == "X":
+            if check_turn(self.agent.board) == "X":
                 self.set_next_state(PLAYER1_TURN)
             else:
                 self.set_next_state(PLAYER2_TURN)
 
 class EndGameState(State):
-    def __init__(self, board):
+    def __init__(self, agent):
         super().__init__()
-        self.board = board
+        self.agent = agent
 
     async def run(self):
-        print_board(self.board)
-        print("Game Over.\n")
-        # Display the result and clean up
-        self.set_next_state(EXIT)
+        choice = input("\nWould you like to play again? (y/n): ").lower()
+        while choice not in ["y", "n"]:
+            print("Invalid choice, try again")
+            choice = input("Would you like to play again? (y/n): ").lower()
+        if choice == 'y':
+            print("Starting a new game.")
+            self.agent.reset_board()  # Reset the board in the agent
+            self.set_next_state(START)
+        elif choice == 'n':
+            if self.agent is not None:
+                await self.agent.stop()
+            self.set_next_state(EXIT)
 
 class ExitState(State):
     def __init__(self, agent):
@@ -198,7 +203,6 @@ class ExitState(State):
 async def main():
     tic_tac_toe_agent = TicTacToeAgent(XMPP_JID, XMPP_PASSWORD)
     await tic_tac_toe_agent.start()
-    # The agent is now started, and you can add further logic if needed
 
     try:
         while tic_tac_toe_agent.is_alive():
