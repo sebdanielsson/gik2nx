@@ -117,11 +117,15 @@ class Player1TurnState(State):
         print("\nPlayer X's turn.")
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
+        row -= 1
+        col -= 1
         valid_move = check_move_valid(self.agent.board, row, col)
         while valid_move == False:
             print("Invalid move, try again")
             move = input("Enter your move (row, column): ")
             row, col = map(int, move.split(","))
+            row -= 1
+            col -= 1
             valid_move = check_move_valid(self.agent.board, row, col)
         self.agent.board[row][col] = "X"
         self.set_next_state(CHECK_WIN)
@@ -135,11 +139,15 @@ class Player2TurnState(State):
         print("\nPlayer O's turn.")
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
+        row -= 1
+        col -= 1
         valid_move = check_move_valid(self.agent.board, row, col)
         while valid_move == False:
             print("Invalid move, try again")
             move = input("Enter your move (row, column): ")
             row, col = map(int, move.split(","))
+            row -= 1
+            col -= 1
             valid_move = check_move_valid(self.agent.board, row, col)
         self.agent.board[row][col] = "O"
         self.set_next_state(CHECK_WIN)
