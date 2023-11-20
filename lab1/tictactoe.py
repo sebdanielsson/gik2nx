@@ -33,26 +33,19 @@ def check_turn(board):
         return "O"
 
 def check_winning(board):
-    line=0
-    if board[0][0]==board[0][1] and board[0][1]==board[0][2] and board[0][0]!=0:
-        line=board[0][0]
-    if board[1][0]==board[1][1] and board[1][1]==board[1][2] and board[1][0]!=0:
-        line=board[1][0]
-    if board[2][0]==board[2][1] and board[2][1]==board[2][2] and board[2][0]!=0:
-        line=board[2][0]
-        
-    if board[0][0]==board[1][0] and board[1][0]==board[2][0] and board[0][0]!=0:
-        line=board[0][0]
-    if board[0][1]==board[1][1] and board[1][1]==board[2][1] and board[0][1]!=0:
-        line=board[0][1]
-    if board[0][2]==board[1][2] and board[1][2]==board[2][2] and board[0][2]!=0:
-        line=board[0][2]
+    for i in range(3):
+        if board[i][0] == board[i][1] == board[i][2] and board[i][0] != " ":
+            return board[i][0]
 
-    if board[0][0]==board[1][1] and board[1][1]==board[2][2] and board[0][0]!=0:
-        line=board[0][0]
-    if board[0][2]==board[1][1] and board[1][1]==board[2][0] and board[0][2]!=0:
-        line=board[0][2]  
-    return line
+        if board[0][i] == board[1][i] == board[2][i] and board[0][i] != " ":
+            return board[0][i]
+
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] != " ":
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] and board[0][2] != " ":
+        return board[0][2]
+
+    return 0
 
 def check_board_full(board):
     for row in board:
@@ -112,6 +105,7 @@ class StartState(State):
 
     async def run(self):
         print("Game started! Player X begins.")
+        print_board(self.agent.board)
         self.set_next_state(PLAYER1_TURN)
 
 class Player1TurnState(State):
@@ -121,7 +115,6 @@ class Player1TurnState(State):
 
     async def run(self):
         print("\nPlayer X's turn.")
-        print_board(self.agent.board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
         valid_move = check_move_valid(self.agent.board, row, col)
@@ -140,7 +133,6 @@ class Player2TurnState(State):
 
     async def run(self):
         print("\nPlayer O's turn.")
-        print_board(self.agent.board)
         move = input("Enter your move (row, column): ")
         row, col = map(int, move.split(","))
         valid_move = check_move_valid(self.agent.board, row, col)
@@ -158,6 +150,7 @@ class CheckWinState(State):
         self.agent = agent
 
     async def run(self):
+        print_board(self.agent.board)
         line = check_winning(self.agent.board)
         if line in ["X", "O"]:
             print(f"\nPlayer {line} wins!")
