@@ -1,6 +1,13 @@
 # lab1
 spade
 
+# assignment1
+matplotlib
+mesa
+seaborn
+numpy
+pandas
+
 # misc
 ipykernel
 python-dotenv
