@@ -55,12 +55,10 @@ def check_board_full(board):
     return True
 
 def check_move_valid(board, row, col):
-    if row < 0 or row > 2 or col < 0 or col > 2:
-        return False
-    elif board[row][col] != " ":
-        return False
-    else:
+    if board[row][col] == " ":
         return True
+    else:
+        return False
 
 load_dotenv()
 
