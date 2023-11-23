@@ -1,9 +1,12 @@
+# Group 7: Jesper Andersson (h21jespa), Vernonika Engberg (h21veren), Sebastian Danielsson (h21sebda)
+
 import asyncio
 from dotenv import load_dotenv
 from os import getenv
 from spade.agent import Agent
 from spade.behaviour import FSMBehaviour, State
 
+# Create a new board
 def new_board():
     return [
         [" ", " ", " "],
@@ -11,6 +14,7 @@ def new_board():
         [" ", " ", " "],
     ]
 
+# Print the board
 def print_board(board):
     for row in board:
         print("|", end="")
@@ -18,6 +22,7 @@ def print_board(board):
             print(cell, end="|")
         print()
 
+# Check whose turn it is
 def check_turn(board):
     x_count = 0
     o_count = 0
@@ -32,6 +37,7 @@ def check_turn(board):
     else:
         return "O"
 
+# Check if someone has won
 def check_winning(board):
     for i in range(3):
         if board[i][0] == board[i][1] == board[i][2] and board[i][0] != " ":
@@ -47,6 +53,7 @@ def check_winning(board):
 
     return 0
 
+# Check if the board is full
 def check_board_full(board):
     for row in board:
         for cell in row:
@@ -54,6 +61,7 @@ def check_board_full(board):
                 return False
     return True
 
+# Check if the move is valid
 def check_move_valid(board, row, col):
     if row < 0 or row > 2 or col < 0 or col > 2:
         return False
@@ -62,6 +70,7 @@ def check_move_valid(board, row, col):
     else:
         return True
 
+# Load environment variables from .env file
 load_dotenv()
 
 XMPP_JID = getenv('XMPP_JID', 'test@localhost')
@@ -70,10 +79,11 @@ XMPP_PASSWORD = getenv('XMPP_PASSWORD', 'password')
 # FSM State names
 START, PLAYER1_TURN, PLAYER2_TURN, CHECK_WIN, END_GAME, EXIT = "START", "PLAYER1_TURN", "PLAYER2_TURN", "CHECK_WIN", "END_GAME", "EXIT"
 
+# TicTacToeAgent class
 class TicTacToeAgent(Agent):
     def __init__(self, jid, password, verify_security=False):
         super().__init__(jid, password, verify_security)
-        self.board = new_board()   # Initialize the board
+        self.board = new_board()
 
     async def setup(self):
         fsm = FSMBehaviour()
@@ -98,6 +108,7 @@ class TicTacToeAgent(Agent):
     def reset_board(self):
         self.board = new_board()
 
+# FSM States
 class StartState(State):
     def __init__(self, agent):
         super().__init__()
@@ -184,7 +195,7 @@ class EndGameState(State):
             choice = input("Would you like to play again? (y/n): ").lower()
         if choice == 'y':
             print("Starting a new game.")
-            self.agent.reset_board()  # Reset the board in the agent
+            self.agent.reset_board()
             self.set_next_state(START)
         elif choice == 'n':
             print("Exiting game.\n")
@@ -207,7 +218,7 @@ async def main():
 
     try:
         while tic_tac_toe_agent.is_alive():
-            await asyncio.sleep(1)  # Sleep for a while before checking again
+            await asyncio.sleep(1)
     except KeyboardInterrupt:
         await tic_tac_toe_agent.stop()
     print("Agent stopped")
