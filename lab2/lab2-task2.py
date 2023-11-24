@@ -1,6 +1,7 @@
+# Find the value of y
 import numpy as np
 
-def calculate_expression(a, b):
+def calculate_y(a, b):
     a = np.array(a, dtype=np.float64)
     b = np.array(b, dtype=np.float64)
 
@@ -27,15 +28,16 @@ def calculate_expression(a, b):
     # Return the sum of the two summations
     return first_sum + second_sum
 
+
 # Generate random arrays for a and b with integers between 1 and 100
-#np.random.seed(0)  # Set a seed for reproducibility
+np.random.seed(1234)  # Set a seed for reproducibility
 a = np.random.randint(1, 100, 50)
 b = np.random.randint(1, 100, 40)
 
 # Print a and b
-print(a)
-print(b)
+# print(a)
+# print(b)
 
 # Calculate the result of the expression
-result_with_large_numbers = calculate_expression(a, b)
+result_with_large_numbers = calculate_y(a, b)
 print("Result:", result_with_large_numbers)
