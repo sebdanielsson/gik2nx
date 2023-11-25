@@ -22,7 +22,7 @@ cd gik2nx/lab2
 Each line will return the time it took to run the script in seconds.
 
 ```powershell
-python .\lab2-task1.py
-python .\lab2-task2.py
-python .\lab2-task3.py
+(Measure-Command { python .\lab2-task1.py }).TotalSeconds
+(Measure-Command { python .\lab2-task2.py }).TotalSeconds
+(Measure-Command { python .\lab2-task3.py }).TotalSeconds
 ```
