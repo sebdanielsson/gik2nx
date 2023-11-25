@@ -1,5 +1,8 @@
 # Find the value of y
 import numpy as np
+import time
+
+start_time = time.time()
 
 def calculate_y(a, b):
     a = np.array(a, dtype=np.float64)
@@ -40,4 +43,9 @@ b = np.random.randint(1, 100, 40)
 
 # Calculate the result of the expression
 result_with_large_numbers = calculate_y(a, b)
+
+end_time = time.time()
+execution_time = end_time - start_time
+
+print(f"Execution time (seconds): {execution_time}")
 print("Result:", result_with_large_numbers)

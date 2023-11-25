@@ -1,5 +1,8 @@
 # Find the value of Z
 import numpy as np
+import time
+
+start_time = time.time()
 
 def calculate_z(A1, A2, B1, B2):
     # Ensure the dimensions of A1, A2, B1, and B2 are 25x25 and the elements are positive integers less than 100
@@ -25,5 +28,8 @@ B2 = np.random.randint(1, 100, (25, 25))
 # Calculate Z
 Z = calculate_z(A1, A2, B1, B2)
 
-# Print Z
-print(Z)
+end_time = time.time()
+execution_time = end_time - start_time
+
+print(f"Execution time (seconds): {execution_time}")
+print(f"Result: {Z}")
