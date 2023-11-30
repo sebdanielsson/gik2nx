@@ -1,9 +1,9 @@
 # Find the value of Z
 import numpy as np
 
-matrix_rows = 250
-matrix_cols = 250
-integer_max = 1000
+matrix_rows = 2500
+matrix_cols = 2500
+integer_max = 10000
 
 
 def calculate_z(A1, A2, B1, B2):
