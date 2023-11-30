@@ -3,6 +3,7 @@ import numpy as np
 
 matrix_rows = 250
 matrix_cols = 250
+integer_max = 1000
 
 
 def calculate_z(A1, A2, B1, B2):
@@ -16,17 +17,17 @@ def calculate_z(A1, A2, B1, B2):
             "Dimensions of A1, A2, B1, and B2 must be ${matrix_rows}x${matrix_cols}."
         )
     if (
-        np.any(A1 >= 100)
-        or np.any(A2 >= 100)
-        or np.any(B1 >= 100)
-        or np.any(B2 >= 100)
+        np.any(A1 >= integer_max)
+        or np.any(A2 >= integer_max)
+        or np.any(B1 >= integer_max)
+        or np.any(B2 >= integer_max)
         or np.any(A1 <= 0)
         or np.any(A2 <= 0)
         or np.any(B1 <= 0)
         or np.any(B2 <= 0)
     ):
         raise ValueError(
-            "Elements in A1, A2, B1, and B2 must be positive integers less than 100."
+            "Elements in A1, A2, B1, and B2 must be positive integers less than ${integer_max}."
         )
 
     # Calculate Z1, Z2, and Z
@@ -36,12 +37,11 @@ def calculate_z(A1, A2, B1, B2):
     return Z
 
 
-# Generate 2D matrices for A1, A2, B1, and B2 with integers between 1 and 100
 np.random.seed(1234)  # Set a seed for reproducibility
-A1 = np.random.randint(1, 100, (matrix_rows, matrix_cols))
-A2 = np.random.randint(1, 100, (matrix_rows, matrix_cols))
-B1 = np.random.randint(1, 100, (matrix_rows, matrix_cols))
-B2 = np.random.randint(1, 100, (matrix_rows, matrix_cols))
+A1 = np.random.randint(1, integer_max, (matrix_rows, matrix_cols))
+A2 = np.random.randint(1, integer_max, (matrix_rows, matrix_cols))
+B1 = np.random.randint(1, integer_max, (matrix_rows, matrix_cols))
+B2 = np.random.randint(1, integer_max, (matrix_rows, matrix_cols))
 
 # Calculate Z
 Z = calculate_z(A1, A2, B1, B2)
