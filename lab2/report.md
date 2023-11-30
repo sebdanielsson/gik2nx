@@ -19,7 +19,7 @@
 
 ## Introduction
 
-In this lab, we will run the tasks from Lab 2 on two different Azure VMs and compare the execution times. We then discuss the results and calculate the performance difference between the two VMs and compare it to the difference in cost.
+In this lab, we will run the tasks from Lab 2 on two different Azure VMs and compare the execution times. We then discuss the results and calculate the performance difference between the two VMs and compare it to the difference in cost. We've made one modification to Task 3 in the lab instructions. We've increaded the matrix size to 2500x2500 and increased the integer size to be randomized up to a max value of 9999 compared to the limit of 99 in the lab instructions. This was done to increase the execution time of the task to make it more heavy compared to Task 2.
 
 ## Method
 
