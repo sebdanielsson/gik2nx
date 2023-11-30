@@ -175,7 +175,7 @@ print(Z)
 | 9   | 0.1621312 | 0.0297539 |
 | 10  | 0.139869  | 0.0296168 |
 
-VM1 Mean Execution Time (s): 0.159
+VM1 Mean Execution Time (s): 0.158
 VM2 Mean Execution Time (s): 0.032
 
 ### Task 2
@@ -211,12 +211,16 @@ VM2 Mean Execution Time (s): 0.227
 | 9   | 0.9740818 | 0.7743415 |
 | 10  | 1.0205213 | 0.7725996 |
 
-VM1 Mean Execution Time (s): 1.016
+VM1 Mean Execution Time (s): 1.015
 VM2 Mean Execution Time (s): 0.778
+
+### Plots
+
+![Results](./mean-exectime.png)
 
 ## Discussion
 
-xxx
+
 
 ## Conclusion
 
