@@ -218,10 +218,18 @@ VM2 Mean Execution Time (s): 0.778
 
 ![Results](./mean-exectime.png)
 
+![Cost Per Task](./cost-per-task.png)
+
 ## Discussion
 
+Looking at the result above, we can see that the VM with 8 cores and 32GB RAM is faster than the VM with 2 cores and 4GB RAM. The difference in execution time is larger for the tasks that require more computational power. The difference in execution time is 4.9x for task 1, 1.7x for task 2, and 1.3x for task 3. The difference in cost is 4.2x. This means that VM2 is just slightly more cost efficient to use for task 1 compared to VM1. For task 2 and 3, VM1 is considerably more cost efficient to use compared to VM2.
 
+One reason for this falloff in cost-efficiency could be that the tasks are not utalizing multiple cores efficiently, thus the extra cores on VM2 are not being used to their full potential.
+
+In a real world scenario one would also need to consider the cost of the idle time of the VMs. If the VMs are only used for a short period of time, the cost of the idle time could be higher than the cost of the actual execution time. In this case, VM1 would be more cost efficient to use for all three tasks since the cost of the idle time would be much lower.
 
 ## Conclusion
 
-xxx
+In this lab, we ran three tasks on two different Azure VMs and compared the execution times. We then discussed the results and calculated the performance difference between the two VMs and compared it to the difference in cost. We found that the VM with 8 cores and 32GB RAM is faster than the VM with 2 cores and 4GB RAM. The difference in execution time is smaller for the longer running tasks. One reason for this falloff in cost-efficiency could be that the tasks are not utalizing multiple cores efficiently, thus the extra cores on VM2 are not being used to their full potential. In a real world scenario one would also need to consider the cost of the idle time of the VMs. If the VMs are only used for a short period of time, the cost of the idle time could be higher than the cost of the actual execution time. In this case, VM1 would be more cost efficient to use for all three tasks since the cost of the idle time would be much lower.
+
+An interesting change to the lab would be to run much longer tasks and see if the difference in execution time and cost-efficiency changes. Another interesting change would be to run run some tasks that can utilize multiple cores efficiently and see if the difference in execution time and cost-efficiency changes.
