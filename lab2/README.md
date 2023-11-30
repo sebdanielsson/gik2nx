@@ -3,11 +3,11 @@
 ## Prerequisites
 
 ```powershell
-Microsoft.PowerShell
+winget install Microsoft.PowerShell
+winget install Git.Git
 winget install Python.Python.3.12
 python -m pip install --upgrade pip
 pip install numpy
-winget install Git.Git
 ```
 
 ## Setup
