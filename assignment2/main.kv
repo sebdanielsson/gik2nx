@@ -1,0 +1,28 @@
+Screen:
+    HomeScreen:
+        id: home
+        name: 'home'
+
+<HomeScreen>:
+    RelativeLayout:
+        Label:
+            text: 'Home Screen'
+            font_size: 30
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDTextField:
+            hint_text: "Helper text on focus"
+            helper_text: "This will disappear when you click off"
+            helper_text_mode: "on_focus"
+            size_hint: 0.5, 0.25
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+        MDTextField:
+            hint_text: "Helper text on focus"
+            helper_text: "This will disappear when you click off"
+            helper_text_mode: "on_focus"
+            size_hint: 0.5, 0.25
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+        Button:
+            text: 'Go to Second Screen'
+            size_hint: 0.5, 0.25
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            on_release: app.root.search = 'id.country.text, id.city.text'

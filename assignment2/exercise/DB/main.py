@@ -8,7 +8,7 @@ import json
 
 
 class HomeScreen(Screen):
-    firebase_url = ''
+    firebase_url = 'https://gik2nx-assignment2-6efca-default-rtdb.europe-west1.firebasedatabase.app/.json'
     flname = StringProperty()
     age = StringProperty()
     salary = StringProperty()
