@@ -50,12 +50,13 @@ class MainApp(MDApp):
         timeanddate_url = f'https://www.timeanddate.com/weather/{timeanddate_country}/{timeanddate_city}'
         wunderground_url = f'https://www.wunderground.com/weather/{wunderground_country}/{city}'
 
-        # Try to get data from timeanddate.com if it fails, try wunderground.com
-        try:
-            headers = {
+        headers = {
                 'Accept-Language': 'sv',
                 'Accept-Region': 'se',
             }
+
+        # Try to get data from timeanddate.com if it fails, try wunderground.com
+        try:
             response_timeanddate = requests.get(url=timeanddate_url, headers=headers)
             response_wunderground = requests.get(url=wunderground_url, headers=headers)
             if response_timeanddate.status_code >= 200 and response_timeanddate.status_code < 300:
@@ -69,12 +70,15 @@ class MainApp(MDApp):
                 self.humidity = secondclass.findAll('td')[5].get_text()
             else:
                 print("Failed to retrieve weather data from timeanddate.com")
-                headers = {
-                    'Accept-Language': 'sv',
-                    'Accept-Region': 'se',
-                }
                 if response_wunderground.status_code >= 200 and response_wunderground.status_code < 300:
                     soup = BeautifulSoup(response_wunderground.text,'html.parser')
+
+                    # If the city does not exist, the website will return a page containing the text ', undefined'
+                    if soup.find_all(class_='station-state')[0].text == ', undefined':
+                        toast("City does not exist")
+                        print("City does not exist")
+                        return
+
                     temp_circle = soup.find_all(class_='test-true wu-unit wu-unit-temperature is-degree-visible ng-star-inserted')[0]
                     additional_conditions = soup.find(class_='additional-conditions')
 
