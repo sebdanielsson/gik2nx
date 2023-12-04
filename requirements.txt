@@ -8,6 +8,11 @@ seaborn
 numpy
 pandas
 
+# assignment2
+kivy
+kivymd
+beautifulsoup4
+
 # misc
 ipykernel
 python-dotenv
