@@ -7,6 +7,7 @@ from kivymd.toast import toast
 from bs4 import BeautifulSoup
 import requests
 import json
+import datetime
 
 Config.set('graphics', 'width', str(420))
 Config.set('graphics', 'height', str(980))
@@ -101,7 +102,9 @@ class MainApp(MDApp):
         self.root.ids.country.text = ''
         self.root.ids.city.text = ''
 
-    def save_to_db(self):
+    def save_to_db(self, country, city):
+        utc_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        
         if self.temperature == '':
             toast("No data to save")
             return
@@ -109,8 +112,8 @@ class MainApp(MDApp):
             toast("Data already saved")
             return
 
-        print("Saving data database")
-        json_data = '{"SavedWeatherData":{"Temperature": "'+self.temperature+'", "Visibility": "'+self.visibility+'", "Pressure": "'+self.pressure+'", "Humidity": "'+self.humidity+'"}}'
+        print("Saving data to database")
+        json_data = '{"'+country+'-'+city+' '+utc_time+'":{"Temperature": "'+self.temperature+'", "Visibility": "'+self.visibility+'", "Pressure": "'+self.pressure+'", "Humidity": "'+self.humidity+'"}}'
         res=requests.post(url=self.firebase_url, json=json.loads(json_data))
         print(res)
         self.allow_save = False

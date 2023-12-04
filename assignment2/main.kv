@@ -51,7 +51,7 @@ Screen:
                 text: 'Save to DB'
                 size_hint_x: None
                 width: dp(130)
-                on_release: app.save_to_db()
+                on_release: app.save_to_db(country.text.lower(), city.text.lower())
 
             # Clear button
             MDRaisedButton:
