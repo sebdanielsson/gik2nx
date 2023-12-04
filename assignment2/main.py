@@ -1,27 +1,39 @@
-# Use https://www.wunderground.com/weather/se/borlänge for Assignment
-from kivymd.app import MDApp
+from kivy.config import Config
+from kivy.lang import Builder
 from kivy.core.window import Window
-from kivy.uix.screenmanager import Screen
+from kivy.properties import NumericProperty, StringProperty
+from kivymd.app import MDApp
+from kivymd.toast import toast
 from bs4 import BeautifulSoup
-from kivy.properties import StringProperty
 import requests
+import json
 
+Config.set('graphics', 'width', str(420))
+Config.set('graphics', 'height', str(980))
 
-class HomeScreen(Screen):
-    weather = StringProperty()
-    description = StringProperty()
-    humidity = StringProperty()
-    pressure = StringProperty()
-    visibility = StringProperty()
+class MainApp(MDApp):
+    firebase_url = 'https://gik2nx-assignment2-6efca-default-rtdb.europe-west1.firebasedatabase.app/.json'
+    allow_save = False
+
+    temperature = StringProperty('')
+    humidity = StringProperty('')
+    pressure = StringProperty('')
+    visibility = StringProperty('')
+
+    def build(self):
+        #self.theme_cls.theme_style = "Dark"
+        Window.size = (400, 600)
+        return Builder.load_file('main.kv')
 
     def search(self, country, city):
+        # Make sure that the user has filled in both fields
+        if not country or not city:
+            toast("Please fill in both search fields.")
+            return
+
         # Get the country and city name from the text fields
         country = country.lower()
         city = city.lower()
-
-        # Debug print
-        print("Country: ", country)
-        print("City: ", city)
 
         # Set the country value for the websites
         if country == 'sweden':
@@ -40,33 +52,62 @@ class HomeScreen(Screen):
 
         # Try to get data from timeanddate.com if it fails, try wunderground.com
         try:
-            response = requests.get(url=timeanddate_url)
-            if response.status_code >= 200 and response.status_code < 300:
-                soup = BeautifulSoup(response.text,'html.parser')
+            headers = {
+                'Accept-Language': 'sv',
+                'Accept-Region': 'se',
+            }
+            response_timeanddate = requests.get(url=timeanddate_url, headers=headers)
+            response_wunderground = requests.get(url=wunderground_url, headers=headers)
+            if response_timeanddate.status_code >= 200 and response_timeanddate.status_code < 300:
+                soup = BeautifulSoup(response_timeanddate.text,'html.parser')
                 mainclass = soup.find(class_='bk-focus__qlook')
                 secondclass = soup.find(class_='bk-focus__info')
-                self.weather = mainclass.find(class_='h2').get_text()
-                self.visibility = secondclass.findAll('td')[3].get_text()  # can also try slicing
+
+                self.temperature = mainclass.find('div', class_='h2').get_text()
+                self.visibility = secondclass.findAll('td')[3].get_text()
                 self.pressure = secondclass.findAll('td')[4].get_text()
                 self.humidity = secondclass.findAll('td')[5].get_text()
             else:
                 print("Failed to retrieve weather data from timeanddate.com")
-                response = requests.get(url=wunderground_url)
-                if response.status_code >= 200 and response.status_code < 300:
-                    print("Status code: ", response.status_code)
-                    soup = BeautifulSoup(response.text,'html.parser')
-                    mainclass = soup.find(class_='h1')
+                headers = {
+                    'Accept-Language': 'sv',
+                    'Accept-Region': 'se',
+                }
+                if response_wunderground.status_code >= 200 and response_wunderground.status_code < 300:
+                    soup = BeautifulSoup(response_wunderground.text,'html.parser')
+                    temp_circle = soup.find_all(class_='test-true wu-unit wu-unit-temperature is-degree-visible ng-star-inserted')[0]
+                    additional_conditions = soup.find(class_='additional-conditions')
 
+                    self.temperature = temp_circle.find_all('span')[0].text + temp_circle.find_all('span')[1].text
+                    self.visibility = additional_conditions.find_all(class_='row')[1].find_all('div')[1].get_text().replace(u'\xb0', '')
+                    self.pressure = additional_conditions.find_all(class_='row')[0].find_all('div')[1].get_text().replace(u'\xb0', '')
+                    self.humidity = additional_conditions.find_all(class_='row')[4].find_all('div')[1].get_text().replace(u'\xb0', '')
                 else:
                     print("Failed to retrieve weather data from wunderground.com")
+            self.allow_save = True
         except requests.exceptions.RequestException as e:
             print("An error occurred:", e)
 
+    # Clear the text fields (No button added yet)
+    def clear(self):
+        self.temperature = ''
+        self.humidity = ''
+        self.pressure = ''
+        self.visibility = ''
 
-class MainApp(MDApp):
-    def build(self, **kwargs):
-        self.theme_cls.theme_style = "Dark"
-        Window.size = (400, 600)
+    def save_to_db(self):
+        if self.temperature == '':
+            toast("No data to save")
+            return
+        elif self.allow_save == False:
+            toast("Data already saved")
+            return
 
+        print("Saving data database")
+        json_data = '{"SavedWeatherData":{"Temperature": "'+self.temperature+'", "Visibility": "'+self.visibility+'", "Pressure": "'+self.pressure+'", "Humidity": "'+self.humidity+'"}}'
+        res=requests.post(url=self.firebase_url, json=json.loads(json_data))
+        print(res)
+        self.allow_save = False
 
-MainApp().run()
+if __name__ == '__main__':
+    MainApp().run()

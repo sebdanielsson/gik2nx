@@ -1,28 +1,127 @@
-Screen:
-    HomeScreen:
-        id: home
-        name: 'home'
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
+#:import MDLabel kivymd.uix.label.MDLabel
 
-<HomeScreen>:
-    RelativeLayout:
-        Label:
-            text: 'Home Screen'
-            font_size: 30
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+Screen:
+
+    # Title and search section
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(20)
+
+        # Title
+        MDLabel:
+            text: 'Weather'
+            halign: 'center'
+            font_style: 'H5'
+            height: self.texture_size[1]
+
+        # Search section
         MDTextField:
-            hint_text: "Helper text on focus"
-            helper_text: "This will disappear when you click off"
-            helper_text_mode: "on_focus"
-            size_hint: 0.5, 0.25
-            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            id: country
+            hint_text: 'Enter country'
+            mode: 'rectangle'
+
         MDTextField:
-            hint_text: "Helper text on focus"
-            helper_text: "This will disappear when you click off"
-            helper_text_mode: "on_focus"
-            size_hint: 0.5, 0.25
-            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
-        Button:
-            text: 'Go to Second Screen'
-            size_hint: 0.5, 0.25
-            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
-            on_release: app.root.search = 'id.country.text, id.city.text'
+            id: city
+            hint_text: 'Enter city'
+            mode: 'rectangle'
+
+        # Search button
+        MDRaisedButton:
+            text: 'Get Weather'
+            pos_hint: {'center_x': 0.5}
+            on_release: app.search(country.text, city.text)
+
+        # Save to db button
+        MDRaisedButton:
+            text: 'Save to DB'
+            pos_hint: {'center_x': 0.5}
+            on_release: app.save_to_db()
+
+        # Show weather information
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: dp(120)
+
+            # First row for Temperature and Humidity
+            BoxLayout:
+                orientation: 'horizontal'
+
+                # Temperature
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 0
+
+                    MDLabel:
+                        text: 'Temperature'
+                        halign: 'center'
+                        bold: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        padding: [0, 0]
+                    MDLabel:
+                        text: str(app.temperature)
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+                # Humidity
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 0
+
+                    MDLabel:
+                        text: 'Humidity'
+                        halign: 'center'
+                        bold: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        padding: [0, 0]
+                    MDLabel:
+                        text: str(app.humidity)
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+            # Second row for Pressure and Visibility
+            BoxLayout:
+                orientation: 'horizontal'
+
+                # Pressure
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 0
+
+                    MDLabel:
+                        text: 'Pressure'
+                        halign: 'center'
+                        bold: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        padding: [0, 0]
+                    MDLabel:
+                        text: str(app.pressure)
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+                # Visibility
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 0
+
+                    MDLabel:
+                        text: 'Visibility'
+                        halign: 'center'
+                        bold: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        padding: [0, 0]
+                    MDLabel:
+                        text: str(app.visibility)
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
