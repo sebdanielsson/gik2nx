@@ -94,6 +94,8 @@ class MainApp(MDApp):
         self.humidity = ''
         self.pressure = ''
         self.visibility = ''
+        self.root.ids.country.text = ''
+        self.root.ids.city.text = ''
 
     def save_to_db(self):
         if self.temperature == '':

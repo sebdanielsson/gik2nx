@@ -28,17 +28,41 @@ Screen:
             hint_text: 'Enter city'
             mode: 'rectangle'
 
-        # Search button
-        MDRaisedButton:
-            text: 'Get Weather'
-            pos_hint: {'center_x': 0.5}
-            on_release: app.search(country.text, city.text)
+        # Button row
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)  # Space between buttons
+            size_hint_y: None
+            height: dp(48)
 
-        # Save to db button
-        MDRaisedButton:
-            text: 'Save to DB'
-            pos_hint: {'center_x': 0.5}
-            on_release: app.save_to_db()
+            # Spacers for centering buttons
+            Widget:
+                size_hint_x: 1
+
+            # Get Weather button
+            MDRaisedButton:
+                text: 'Get Weather'
+                size_hint_x: None
+                width: dp(130)
+                on_release: app.search(country.text, city.text)
+
+            # Save to DB button
+            MDRaisedButton:
+                text: 'Save to DB'
+                size_hint_x: None
+                width: dp(130)
+                on_release: app.save_to_db()
+
+            # Clear button
+            MDRaisedButton:
+                text: 'Clear'
+                size_hint_x: None
+                width: dp(130)
+                on_release: app.clear()
+
+            # Spacers for centering buttons
+            Widget:
+                size_hint_x: 1
 
         # Show weather information
         BoxLayout:
