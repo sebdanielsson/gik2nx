@@ -1,6 +1,11 @@
 # lab1
 spade
 
+# lab3
+statsmodels
+pandas
+pmdarima
+
 # assignment1
 matplotlib
 mesa
