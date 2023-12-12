@@ -22,6 +22,15 @@ class MainApp(MDApp):
         Window.size = (360, 600)
         return Builder.load_file('main.kv')
 
+    # Clear the text fields and the weather data
+    def clear(self):
+        self.temperature = ' '
+        self.humidity = ' '
+        self.pressure = ' '
+        self.visibility = ' '
+        self.root.ids.country.text = ''
+        self.root.ids.city.text = ''
+
     def search(self, country, city):
         # Make sure that the user has filled in both fields
         if not country or not city:
@@ -88,15 +97,6 @@ class MainApp(MDApp):
             self.allow_save = True
         except requests.exceptions.RequestException as e:
             print("An error occurred:", e)
-
-    # Clear the text fields (No button added yet)
-    def clear(self):
-        self.temperature = ' '
-        self.humidity = ' '
-        self.pressure = ' '
-        self.visibility = ' '
-        self.root.ids.country.text = ''
-        self.root.ids.city.text = ''
 
     def save_to_db(self, country, city):
         utc_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
