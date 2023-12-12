@@ -9,21 +9,17 @@ import requests
 import json
 import datetime
 
-Config.set('graphics', 'width', str(420))
-Config.set('graphics', 'height', str(980))
-
 class MainApp(MDApp):
     firebase_url = 'https://gik2nx-assignment2-6efca-default-rtdb.europe-west1.firebasedatabase.app/.json'
     allow_save = False
-
-    temperature = StringProperty('')
-    humidity = StringProperty('')
-    pressure = StringProperty('')
-    visibility = StringProperty('')
+    temperature = StringProperty(' ')
+    humidity = StringProperty(' ')
+    pressure = StringProperty(' ')
+    visibility = StringProperty(' ')
 
     def build(self):
-        #self.theme_cls.theme_style = "Dark"
-        Window.size = (400, 600)
+        #  self.theme_cls.theme_style = "Dark"
+        Window.size = (360, 600)
         return Builder.load_file('main.kv')
 
     def search(self, country, city):
