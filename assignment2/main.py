@@ -91,17 +91,17 @@ class MainApp(MDApp):
 
     # Clear the text fields (No button added yet)
     def clear(self):
-        self.temperature = ''
-        self.humidity = ''
-        self.pressure = ''
-        self.visibility = ''
+        self.temperature = ' '
+        self.humidity = ' '
+        self.pressure = ' '
+        self.visibility = ' '
         self.root.ids.country.text = ''
         self.root.ids.city.text = ''
 
     def save_to_db(self, country, city):
         utc_time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         
-        if self.temperature == '':
+        if self.temperature == ' ' or self.temperature == '':
             toast("No data to save")
             return
         elif self.allow_save == False:
