@@ -10,7 +10,8 @@ import json
 import datetime
 
 class MainApp(MDApp):
-    firebase_url = 'https://gik2nx-assignment2-6efca-default-rtdb.europe-west1.firebasedatabase.app/.json'
+    firebase_url_1 = 'https://gik2nx-assignment2-6efca-default-rtdb.europe-west1.firebasedatabase.app/.json'
+    firebase_url_2 = 'https://assignment2-a756d-default-rtdb.firebaseio.com/.json'
     allow_save = False
     temperature = StringProperty(' ')
     humidity = StringProperty(' ')
@@ -110,7 +111,8 @@ class MainApp(MDApp):
 
         print("Saving data to database")
         json_data = '{"'+country+'-'+city+' '+utc_time+'":{"Temperature": "'+self.temperature+'", "Visibility": "'+self.visibility+'", "Pressure": "'+self.pressure+'", "Humidity": "'+self.humidity+'"}}'
-        res=requests.post(url=self.firebase_url, json=json.loads(json_data))
+        res=requests.post(url=self.firebase_url_1, json=json.loads(json_data))
+        res=requests.post(url=self.firebase_url_2, json=json.loads(json_data))
         print(res)
         self.allow_save = False
 
